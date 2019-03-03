@@ -15,6 +15,7 @@ coverage/
 .rbx
 *.class
 .vscode/
+tmp/
 
 # Bundler
 .bundle/*
