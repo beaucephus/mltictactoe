@@ -1,20 +1,30 @@
 # WeightsHelper
 module WeightsHelper
+  def validate_weights(weights)
+    total = 100
+    max = 92
+    min = 1
+    raise "Weights don't add up to 100!" if weights.flatten.sum != total
+
+    raise "At least one weight is greater than #{max}: #{weights}" if weights.any? { |i| i.any? { |j| j > max } }
+
+    raise "At least one weight is less than #{min}: #{weights}" if weights.any? { |i| i.any? { |j| j < min } }
+
+    true
+  end
+
   def read_weights(lookup, key)
     weights_s = lookup.get(key)
     return nil if weights_s.nil?
 
     # Only get this far if the key existed in the DB.
     weights = YAML.safe_load(weights_s)
-    raise "Weights don't add up to 100!" if weights.flatten.sum != 100
 
-    max = 92
-    min = 1
-    raise "At least one weight is greater than #{max}: #{weights}" if weights.any? { |i| i.any? { |j| j > max } }
+    weights if validate_weights(weights)
+  end
 
-    raise "At least one weight is less than #{min}: #{weights}" if weights.any? { |i| i.any? { |j| j < min } }
-
-    weights
+  def write_weights(lookup, key, weights)
+    lookup.set(key, weights.to_yaml) if validate_weights(weights)
   end
 
   def reinforce_decision(lookup, decision)
@@ -38,7 +48,7 @@ module WeightsHelper
       end
       weights[decision[1]][decision[2]] += count
     end
-    lookup.set(decision[0], weights.to_yaml)
+    write_weights(lookup, decision[0], weights)
   end
 
   def deinforce_decision(lookup, decision)
@@ -69,7 +79,7 @@ module WeightsHelper
         end
       end
     end
-    lookup.set(decision[0], weights.to_yaml)
+    write_weights(lookup, decision[0], weights)
   end
 
   def update_weights(lookup, winner_decisions, loser_decisions)
