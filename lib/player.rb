@@ -71,7 +71,21 @@ class Player
   def take_turn(board, weights_lookup)
     raise("Can't take a turn on a full board!") unless board.any? { |row| row.any?(&:empty?) }
 
-    # simple_turn(board)
     weighted_turn(board, weights_lookup)
+  end
+
+  def take_interactive_turn(board)
+    raise("Can't take a turn on a full board!") unless board.any? { |row| row.any?(&:empty?) }
+
+    puts "Given #{board}, input a next token and turn..."
+
+    input = gets.chomp.split
+    token = input[0].to_s
+    row = input[1].to_i
+    column = input[2].to_i
+
+    board[row][column] = token
+
+    board
   end
 end

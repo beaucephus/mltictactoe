@@ -21,7 +21,7 @@ describe Player do
         end
 
         it "updates a single empty tile" do
-          expect(@actual_board).to update_single_empty_tile(@expected_board)
+          expect(@actual_board).to(update_single_empty_tile(@expected_board))
         end
 
         it "doesn't change existing token tiles" do

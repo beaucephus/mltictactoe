@@ -1,6 +1,6 @@
 # TicTacToe
 class TicTacToe
-  attr_accessor :board, :weights_lookup, :turn_player, :player_x, :player_y, :winner, :loser
+  attr_accessor(:board, :weights_lookup, :turn_player, :player_x, :player_y, :winner, :loser)
 
   def initialize(weights_lookup)
     @board = [
@@ -41,7 +41,7 @@ class TicTacToe
     end
   end
 
-  def check_diagonal_win # rubocop:disable Metrics/AbcSize
+  def check_diagonal_win
     if [@board[0][0], @board[1][1], @board[2][2]].all? { |diagonal| diagonal == @turn_player.token } || \
        [@board[0][2], @board[1][1], @board[2][0]].all? { |diagonal| diagonal == @turn_player.token }
       @winner = @turn_player
@@ -64,6 +64,18 @@ class TicTacToe
   def play
     while @winner.nil? && @board.any? { |row| row.any?(&:empty?) }
       @board = @turn_player.take_turn(@board, @weights_lookup)
+      update_winner_loser
+      rotate_players if @winner.nil?
+    end
+  end
+
+  def play_interactive
+    while @winner.nil? && @board.any? { |row| row.any?(&:empty?) }
+      @board = if @turn_player.token.casecmp("o").zero?
+                 @turn_player.take_interactive_turn(@board)
+               else
+                 @turn_player.take_turn(@board, @weights_lookup)
+               end
       update_winner_loser
       rotate_players if @winner.nil?
     end

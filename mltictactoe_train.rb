@@ -19,10 +19,10 @@ num_rounds.times do
   one_game.play
 
   if one_game.winner.nil?
-    puts "It's a draw!"
+    # puts "It's a draw!"
     draws += 1
   else
-    puts "#{one_game.winner} won!"
+    # puts "#{one_game.winner} won!"
     if one_game.winner.token == "x"
       x_wins += 1
     else
@@ -33,4 +33,6 @@ num_rounds.times do
   # one_game.print_board
 end
 
-puts "x_wins: #{x_wins} o_wins: #{o_wins} ties: #{draws}"
+puts "x_wins: #{x_wins}(#{x_wins * 100.0 / num_rounds}%) \
+       o_wins: #{o_wins}(#{o_wins * 100.0 / num_rounds}%) \
+       ties: #{draws}(#{draws * 100.0 / num_rounds}%)"
